@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Kida - Smart Tours & Travel Booking</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <p>Loading Travel Kida...</p>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-plane"></i>
+                <span>Travel Kida</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#home" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="#packages" class="nav-link">Packages</a></li>
+                <li class="nav-item"><a href="#about" class="nav-link">About</a></li>
+                <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li>
+                <li class="nav-item">
+                    <div id="authButtons">
+                        <button class="login-btn" onclick="showLoginModal()">
+                            <i class="fas fa-user"></i> Login
+                        </button>
+                        <button class="admin-btn" onclick="showAdminLogin()">
+                            <i class="fas fa-cog"></i> Admin
+                        </button>
+                    </div>
+                    <div id="userProfile" class="user-profile" style="display: none;">
+                        <div class="profile-dropdown">
+                            <button class="profile-btn" onclick="toggleUserMenu()">
+                                <i class="fas fa-user-circle"></i>
+                                <span id="userName">User</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="profile-menu">
+                                <a href="#" onclick="showUserDashboard()"><i class="fas fa-dashboard"></i> Dashboard</a>
+                                <a href="#" onclick="showMyBookings()"><i class="fas fa-ticket-alt"></i> My Bookings</a>
+                                <a href="#" onclick="showProfile()"><i class="fas fa-user"></i> Profile</a>
+                                <div class="menu-divider"></div>
+                                <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <h1 class="hero-title">Discover Your Next Adventure</h1>
+            <p class="hero-subtitle">Explore amazing destinations with our carefully curated travel packages</p>
+            <div class="hero-search">
+                <div class="search-box">
+                    <input type="text" id="heroSearchInput" placeholder="Where do you want to go?">
+                    <button class="search-btn" onclick="searchFromHero()">
+                        <i class="fas fa-search"></i>
+                        <span>Search</span>
+                    </button>
+                </div>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-number" id="totalPackages">50+</div>
+                    <div class="stat-label">Destinations</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="totalBookings">1000+</div>
+                    <div class="stat-label">Happy Travelers</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">4.8</div>
+                    <div class="stat-label">Rating</div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <a href="#packages" class="scroll-indicator">
+                <i class="fas fa-chevron-down"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Packages Section -->
+    <section id="packages" class="packages-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Popular Travel Packages</h2>
+                <p>Discover amazing destinations at unbeatable prices</p>
+            </div>
+
+            <div class="packages-filter">
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-category="all">All Packages</button>
+                    <button class="filter-tab" data-category="Beach">Beach</button>
+                    <button class="filter-tab" data-category="Adventure">Adventure</button>
+                    <button class="filter-tab" data-category="Nature">Nature</button>
+                    <button class="filter-tab" data-category="Heritage">Heritage</button>
+                </div>
+
+                <div class="filter-controls">
+                    <div class="search-control">
+                        <input type="text" id="packageSearchInput" placeholder="Search packages...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="sort-control">
+                        <select id="sortSelect">
+                            <option value="rating">Best Rated</option>
+                            <option value="price_low">Price: Low to High</option>
+                            <option value="price_high">Price: High to Low</option>
+                            <option value="newest">Newest First</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div id="packagesGrid" class="packages-grid">
+                <!-- Packages will be loaded here -->
+            </div>
+
+            <div class="load-more-container">
+                <button id="loadMoreBtn" class="load-more-btn" style="display: none;">
+                    <i class="fas fa-plus"></i>
+                    Load More Packages
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose Travel Kida?</h2>
+                <p>Your trusted travel partner for unforgettable experiences</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Secure Booking</h3>
+                    <p>Your bookings are protected with our advanced security measures and instant confirmation</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>24/7 Support</h3>
+                    <p>Round-the-clock customer support to assist you before, during, and after your journey</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <h3>Best Prices</h3>
+                    <p>Guaranteed best prices with exclusive deals and no hidden charges</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h3>Expert Planning</h3>
+                    <p>Carefully curated itineraries designed by travel experts for maximum enjoyment</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Group Discounts</h3>
+                    <p>Special discounts for group bookings and family packages</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Mobile Ready</h3>
+                    <p>Book and manage your trips on the go with our mobile-optimized platform</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Get In Touch</h2>
+                <p>We're here to help make your travel dreams come true</p>
+            </div>
+
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Phone</h4>
+                            <p><a href="tel:+919372404996">+91 9372404996</a></p>
+                            <p><a href="tel:+918691929009">+91 8691929009</a></p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p><a href="mailto:info@travelkida.com" class="email-link">info@travelkida.com</a></p>
+                            <p><a href="mailto:support@travelkida.com" class="email-link">support@travelkida.com</a></p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>MAIN OFFICE</h4>
+                            <p>181,A/15,KUKREJA COLONY,CHEMBUR<br>MUMBAI, MAHARASHTRA 400074<br>INDIA</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Working Hours</h4>
+                            <p>Mon - Sat: 9:00 AM - 8:00 PM<br>Sun: 10:00 AM - 6:00 PM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-plane"></i>
+                        <span>Travel Kida</span>
+                    </div>
+                    <p>Your trusted travel partner for creating unforgettable memories around the world.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#packages">Travel Packages</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Destinations</h4>
+                    <ul>
+                        <li><a href="#">Goa</a></li>
+                        <li><a href="#">Kerala</a></li>
+                        <li><a href="#">Rajasthan</a></li>
+                        <li><a href="#">Himachal Pradesh</a></li>
+                        <li><a href="#">Andaman Islands</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Customer Support</a></li>
+                        <li><a href="#">Booking Help</a></li>
+                        <li><a href="#">Payment Options</a></li>
+                        <li><a href="#">Cancellation</a></li>
+                        <li><a href="#">Travel Insurance</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Travel Kida Travel Booking. All rights reserved. | Built with ❤️ in India</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-sign-in-alt"></i> Welcome Back</h2>
+                <button class="modal-close" onclick="closeModal('loginModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="loginForm" class="modal-form">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" name="email" required>
+                    <i class="form-icon fas fa-envelope"></i>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" name="password" required>
+                    <i class="form-icon fas fa-lock"></i>
+                    <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In
+                </button>
+            </form>
+            <div class="modal-footer">
+                <p>Don't have an account? <a href="#" onclick="showRegisterModal()">Register here</a></p>
+                <p class="demo-credentials">
+                    <strong>Demo Login:</strong> user@example.com / user123
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-plus"></i> Create Account</h2>
+                <button class="modal-close" onclick="closeModal('registerModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="registerForm" class="modal-form">
+                <div class="form-group">
+                    <label for="registerName">Full Name</label>
+                    <input type="text" id="registerName" name="name" required>
+                    <i class="form-icon fas fa-user"></i>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email Address</label>
+                    <input type="email" id="registerEmail" name="email" required>
+                    <i class="form-icon fas fa-envelope"></i>
+                </div>
+                <div class="form-group">
+                    <label for="registerPhone">Phone Number</label>
+                    <input type="tel" id="registerPhone" name="phone" placeholder="+91 98765 43210">
+                    <i class="form-icon fas fa-phone"></i>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" name="password" required>
+                    <i class="form-icon fas fa-lock"></i>
+                    <button type="button" class="password-toggle" onclick="togglePassword('registerPassword')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    <i class="form-icon fas fa-lock"></i>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-user-plus"></i>
+                    Create Account
+                </button>
+            </form>
+            <div class="modal-footer">
+                <p>Already have an account? <a href="#" onclick="showLoginModal()">Sign in here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Package Detail Modal -->
+    <div id="packageModal" class="modal package-modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2 id="packageModalTitle">Package Details</h2>
+                <button class="modal-close" onclick="closeModal('packageModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="packageModalContent" class="package-details">
+                <!-- Package details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal booking-modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2>Complete Your Booking</h2>
+                <button class="modal-close" onclick="closeModal('bookingModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="bookingModalContent" class="booking-form">
+                <!-- Booking form will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal payment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-credit-card"></i> Payment</h2>
+                <button class="modal-close" onclick="closeModal('paymentModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="paymentModalContent" class="payment-content">
+                <!-- Payment content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal success-modal">
+        <div class="modal-content">
+            <div class="modal-header success">
+                <h2><i class="fas fa-check-circle"></i> Booking Confirmed!</h2>
+                <button class="modal-close" onclick="closeModal('successModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="successModalContent" class="success-content">
+                <!-- Success content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- User Dashboard -->
+    <div id="userDashboard" class="dashboard" style="display: none;">
+        <div class="dashboard-header">
+            <h2><i class="fas fa-dashboard"></i> My Dashboard</h2>
+            <button class="close-dashboard" onclick="closeDashboard()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="dashboard-content">
+            <div class="dashboard-tabs">
+                <button class="dash-tab active" onclick="showDashTab('overview')">
+                    <i class="fas fa-chart-line"></i> Overview
+                </button>
+                <button class="dash-tab" onclick="showDashTab('bookings')">
+                    <i class="fas fa-ticket-alt"></i> My Bookings
+                </button>
+                <button class="dash-tab" onclick="showDashTab('profile')">
+                    <i class="fas fa-user"></i> Profile
+                </button>
+            </div>
+            <div class="dashboard-body">
+                <div id="overviewTab" class="dash-tab-content active">
+                    <div class="stats-cards">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-ticket-alt"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="userTotalBookings">0</h3>
+                                <p>Total Bookings</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-rupee-sign"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="userTotalSpent">₹0</h3>
+                                <p>Total Spent</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-map-marked-alt"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="userDestinations">0</h3>
+                                <p>Destinations</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="recentBookings" class="recent-bookings">
+                        <!-- Recent bookings will be loaded here -->
+                    </div>
+                </div>
+                <div id="bookingsTab" class="dash-tab-content">
+                    <div id="userBookingsList" class="bookings-list">
+                        <!-- User bookings will be loaded here -->
+                    </div>
+                </div>
+                <div id="profileTab" class="dash-tab-content">
+                    <div id="userProfileContent" class="profile-content">
+                        <!-- User profile will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="admin-dashboard" style="display: none;">
+        <div class="admin-header">
+            <h2><i class="fas fa-cog"></i> Admin Dashboard</h2>
+            <button class="close-admin" onclick="closeAdminDashboard()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="admin-content">
+            <div class="admin-tabs">
+                <button class="admin-tab active" onclick="showAdminTab('stats')">
+                    <i class="fas fa-chart-bar"></i> Statistics
+                </button>
+                <button class="admin-tab" onclick="showAdminTab('bookings')">
+                    <i class="fas fa-list"></i> Bookings
+                </button>
+                <button class="admin-tab" onclick="showAdminTab('packages')">
+                    <i class="fas fa-box"></i> Packages
+                </button>
+                <button class="admin-tab" onclick="showAdminTab('users')">
+                    <i class="fas fa-users"></i> Users
+                </button>
+            </div>
+            <div class="admin-body">
+                <div id="statsTab" class="admin-tab-content active">
+                    <div id="adminStats" class="admin-stats">
+                        <!-- Admin stats will be loaded here -->
+                    </div>
+                </div>
+                <div id="adminBookingsTab" class="admin-tab-content">
+                    <div id="adminBookingsList" class="admin-bookings">
+                        <!-- Admin bookings will be loaded here -->
+                    </div>
+                </div>
+                <div id="adminPackagesTab" class="admin-tab-content">
+                    <div id="adminPackagesList" class="admin-packages">
+                        <!-- Admin packages will be loaded here -->
+                    </div>
+                </div>
+                <div id="adminUsersTab" class="admin-tab-content">
+                    <div id="adminUsersList" class="admin-users">
+                        <!-- Admin users will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">
+        <div class="toast-content">
+            <i class="toast-icon"></i>
+            <span class="toast-message"></span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
